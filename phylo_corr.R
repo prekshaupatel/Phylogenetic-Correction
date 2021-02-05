@@ -1,7 +1,6 @@
 library(phytools)
 library(ape)
 library(taxize)
-library(evomap)
 
 ### set the path to the location of the data file (.csv)
 path <- "/Users/prekshapatel/Desktop/data_module2.csv"
@@ -53,6 +52,7 @@ rownames(Y) = c(m_species)
 
 ### generate residuals for the dependent variable
 m_residuals <- phyl.resid(phy, X, Y, method="BM")$resid
+colnames(m_residuals) <- c("residuals")
 
 ### save residuals_data along with the rest of the data
 f_data <- merge(data, m_residuals, by=0, all=TRUE)
