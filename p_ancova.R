@@ -1,19 +1,19 @@
 require(phytools); require(geiger); require(nlme); require(evomap); require(taxize)
 
 ### set the path to the location of the data file (.csv)
-input = "/Users/prekshapatel/Desktop/101L\ HC/101L\ Brain\ DATA\ no\ Dolphin\ 20210207\ vermis\ cerebellum.csv"
+input = "resid_module2.csv"
 
 ### set col_latin_names to the column number containing the 
 ### latin names of the species
-col_latin_names <- 1
+col_latin_names <- 2
 
 ### set col_independent to the column number of the independent variable
 ### eg. the log_10 brain volume
-col_independent <- 12
+col_independent <- 14
 
 ### set col_dependent to the column number of the dependent variable
 ### eg. ratio of cerebellum volume to vermis volume
-col_dependent <- 9
+col_dependent <- 11
 
 
 ### read the data from the data file
@@ -35,7 +35,7 @@ tree <- class2tree(m_class)$phylo
 phy <- compute.brlen(tree, method = "Grafen", power = 1)  ### replot tree
 
 ### extract independent and dependent variable data
-data <- cbind(input_data[,9], input_data[,12])
+data <- cbind(input_data[,col_dependent], input_data[,col_independent])
 colnames(data)<-c("Dependent","Independent")
 rownames(data) = c(m_species)
 
@@ -54,17 +54,11 @@ ungulates <- input_data[input_data$Group == "Ungulates", 1]
 primates <- input_data[input_data$Group == "Primate", 1]
 other <- input_data[input_data$Group == "Other", 1]
 
-c_<-match(c(unlist(carnivora)),m_species)
-r_<-match(c(unlist(rodents)),m_species)
-u_<-match(c(unlist(ungulates)),m_species)
-p_<-match(c(unlist(primates)),m_species)
-o_<-match(c(unlist(other)),m_species)
-
 grpS<-rep("O",length(rownames(data)))
-grpS[p_]<-"P"
-grpS[u_]<-"U"
-grpS[r_]<-"R"
-grpS[c_]<-"C"
+grpS[primates]<-"P"
+grpS[ungulates]<-"U"
+grpS[rodents]<-"R"
+grpS[carnivora]<-"C"
 grpS<-as.factor(grpS) 
 names(grpS)<-rownames(data)
 
@@ -78,7 +72,7 @@ Model_S<-model.matrix(as.formula(Dependent~grpS:Independent),data)
 ### pANCOVA with phylogenetic variance-covariance matrix as covariate 
 gls.ancova(Dependent~Independent,vcv(tree),Model,Model_S)
 
-
+gls.ancova(Dependent~Independent,diag(60),Model,Model_S)
 
 
 
