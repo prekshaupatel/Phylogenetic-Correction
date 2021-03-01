@@ -52,10 +52,10 @@ rownames(Y) = c(m_species)
 
 ### generate residuals for the dependent variable
 m_residuals <- phyl.resid(phy, X, Y, method="BM")$resid
-colnames(m_residuals) <- c("residuals")
+colnames(m_residuals) <- c(paste("residuals","_",colnames(data)[col_dependent]))
 
 ### save residuals_data along with the rest of the data
-f_data <- merge(data, m_residuals, by=0, all=TRUE)
+f_data <- merge(data, m_residuals, by=0, all=TRUE)[, -c(1,2)]
 write.csv(f_data, output)
 
 
