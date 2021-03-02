@@ -29,7 +29,7 @@ In addition: Warning message:
 non-unique value when setting 'row.names': ‘ ’
 ``` 
 **Solution:** <br>
-  This indicates that you have two columns with the same species names. If that is not the case, ensure that your csv does not have extra blank rows. Change the following row to 
+  This indicates that you have two rows with the same species names. If that is not the case, ensure that your csv does not have extra blank rows. Change the following row to 
   
  ```diff
  - data <- read.csv(path) 
